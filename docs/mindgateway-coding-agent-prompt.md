@@ -1,9 +1,11 @@
 # Coding Agent Prompt: Initialize MindGateway Project Structure
 
 ## Project Overview
+
 Create the initial directory structure and boilerplate code for MindGateway, an enterprise LLM inference gateway using a hybrid microservices architecture with Go and gRPC.
 
 ## Architecture Context
+
 - **Hybrid Architecture**: Two extracted microservices (Auth Service, Worker Registry) + Modular Monolith (Gateway)
 - **Technology Stack**: Go 1.22+, gRPC, Gin web framework, PostgreSQL, Redis, etcd
 - **Deployment**: Kubernetes-native with Docker support
@@ -132,8 +134,9 @@ mindgateway/
 ## Initial File Contents
 
 ### 1. `go.mod`
+
 ```go
-module github.com/company/mindgateway
+module github.com/ncolesummers/mindgateway
 
 go 1.22
 
@@ -154,6 +157,7 @@ require (
 ```
 
 ### 2. `Makefile`
+
 ```makefile
 .PHONY: build test lint proto run-local
 
@@ -186,6 +190,7 @@ test-integration:
 ```
 
 ### 3. `cmd/gateway/main.go`
+
 ```go
 package main
 
@@ -196,9 +201,9 @@ import (
     "os/signal"
     "syscall"
 
-    "github.com/company/mindgateway/internal/gateway/server"
-    "github.com/company/mindgateway/internal/shared/config"
-    "github.com/company/mindgateway/internal/shared/logging"
+    "github.com/ncolesummers/mindgateway/internal/gateway/server"
+    "github.com/ncolesummers/mindgateway/internal/shared/config"
+    "github.com/ncolesummers/mindgateway/internal/shared/logging"
 )
 
 func main() {
@@ -233,20 +238,21 @@ func main() {
     <-quit
 
     logger.Info("Shutting down server...")
-    
+
     // Graceful shutdown
     ctx, cancel := context.WithTimeout(context.Background(), cfg.ShutdownTimeout)
     defer cancel()
-    
+
     if err := srv.Shutdown(ctx); err != nil {
         logger.Errorf("Server forced to shutdown: %v", err)
     }
-    
+
     logger.Info("Server exited")
 }
 ```
 
 ### 4. `docker-compose.yml`
+
 ```yaml
 version: '3.8'
 
@@ -258,14 +264,14 @@ services:
       POSTGRES_PASSWORD: localdev
       POSTGRES_DB: mindgateway
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - '6379:6379'
 
   etcd:
     image: quay.io/coreos/etcd:v3.5.11
@@ -274,7 +280,7 @@ services:
       --advertise-client-urls http://0.0.0.0:2379
       --listen-client-urls http://0.0.0.0:2379
     ports:
-      - "2379:2379"
+      - '2379:2379'
 
   # Mock Ollama for local development
   ollama-mock:
@@ -282,24 +288,25 @@ services:
     volumes:
       - ./test/mocks/ollama:/usr/share/nginx/html
     ports:
-      - "11434:80"
+      - '11434:80'
 
 volumes:
   postgres_data:
 ```
 
 ### 5. `internal/gateway/server/server.go`
+
 ```go
 package server
 
 import (
     "context"
     "net/http"
-    
+
     "github.com/gin-gonic/gin"
     "github.com/prometheus/client_golang/prometheus/promhttp"
-    "github.com/company/mindgateway/internal/gateway/handlers"
-    "github.com/company/mindgateway/internal/shared/config"
+    "github.com/ncolesummers/mindgateway/internal/gateway/handlers"
+    "github.com/ncolesummers/mindgateway/internal/shared/config"
     "github.com/sirupsen/logrus"
 )
 
@@ -307,7 +314,7 @@ type Server struct {
     router *gin.Engine
     config *config.Config
     logger *logrus.Logger
-    
+
     // Modular components
     authClient     AuthClient
     registryClient RegistryClient
@@ -321,14 +328,14 @@ func New(opts ...Option) (*Server, error) {
     s := &Server{
         router: gin.New(),
     }
-    
+
     for _, opt := range opts {
         opt(s)
     }
-    
+
     s.setupRoutes()
     s.setupMiddleware()
-    
+
     return s, nil
 }
 
@@ -336,10 +343,10 @@ func (s *Server) setupRoutes() {
     // Health checks
     s.router.GET("/health", handlers.Health())
     s.router.GET("/ready", handlers.Ready())
-    
+
     // Metrics
     s.router.GET("/metrics", gin.WrapH(promhttp.Handler()))
-    
+
     // API routes
     v1 := s.router.Group("/v1")
     {
@@ -348,7 +355,7 @@ func (s *Server) setupRoutes() {
         v1.POST("/completions", s.handleCompletion)
         v1.POST("/embeddings", s.handleEmbeddings)
     }
-    
+
     // Admin routes
     admin := s.router.Group("/admin")
     admin.Use(s.requireAdmin())
@@ -369,6 +376,7 @@ func (s *Server) Shutdown(ctx context.Context) error {
 ```
 
 ### 6. `.gitignore`
+
 ```
 # Binaries
 bin/
@@ -413,16 +421,19 @@ data/
 
 ## Additional Requirements
 
-1. **Create Initial Proto Files**: 
+1. **Create Initial Proto Files**:
+
    - Define gRPC services for Auth and Registry
    - Include streaming for worker connections
 
 2. **Setup GitHub Actions CI**:
+
    - Test, lint, and build on every push
    - Security scanning with gosec
    - Docker image building
 
 3. **Include README.md** with:
+
    - Architecture overview
    - Quick start guide
    - Development setup instructions
@@ -433,6 +444,7 @@ data/
 5. **Add example configuration files** in `configs/` directory
 
 ## Development Environment Requirements
+
 - Go 1.22+
 - Docker and Docker Compose
 - Make

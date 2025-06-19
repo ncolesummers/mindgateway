@@ -7,9 +7,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/company/mindgateway/internal/gateway/server"
-	"github.com/company/mindgateway/internal/shared/config"
-	"github.com/company/mindgateway/internal/shared/logging"
+	"github.com/ncolesummers/mindgateway/internal/gateway/server"
+	"github.com/ncolesummers/mindgateway/internal/shared/config"
+	"github.com/ncolesummers/mindgateway/internal/shared/logging"
 )
 
 func main() {

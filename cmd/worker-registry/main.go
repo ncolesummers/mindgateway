@@ -7,9 +7,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/company/mindgateway/internal/registry"
-	"github.com/company/mindgateway/internal/shared/config"
-	"github.com/company/mindgateway/internal/shared/logging"
+	"github.com/ncolesummers/mindgateway/internal/registry"
+	"github.com/ncolesummers/mindgateway/internal/shared/config"
+	"github.com/ncolesummers/mindgateway/internal/shared/logging"
 	"google.golang.org/grpc"
 )
 

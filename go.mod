@@ -1,4 +1,4 @@
-module github.com/company/mindgateway
+module github.com/ncolesummers/mindgateway
 
 go 1.22
 

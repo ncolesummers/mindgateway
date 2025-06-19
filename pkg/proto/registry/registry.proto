@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package registry;
 
-option go_package = "github.com/company/mindgateway/pkg/proto/registry";
+option go_package = "github.com/ncolesummers/mindgateway/pkg/proto/registry";
 
 // RegistryService provides worker registry and discovery
 service RegistryService {

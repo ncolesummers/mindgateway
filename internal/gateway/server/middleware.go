@@ -5,7 +5,7 @@ import (
 	
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/company/mindgateway/internal/shared/logging"
+	"github.com/ncolesummers/mindgateway/internal/shared/logging"
 )
 
 // Request metrics

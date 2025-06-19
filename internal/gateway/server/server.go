@@ -6,8 +6,8 @@ import (
 	
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/company/mindgateway/internal/gateway/handlers"
-	"github.com/company/mindgateway/internal/shared/config"
+	"github.com/ncolesummers/mindgateway/internal/gateway/handlers"
+	"github.com/ncolesummers/mindgateway/internal/shared/config"
 	"github.com/sirupsen/logrus"
 )
 

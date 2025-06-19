@@ -4,8 +4,8 @@ import (
 	"net/http"
 	
 	"github.com/gin-gonic/gin"
-	"github.com/company/mindgateway/pkg/api/openai"
-	"github.com/company/mindgateway/internal/shared/errors"
+	"github.com/ncolesummers/mindgateway/pkg/api/openai"
+	"github.com/ncolesummers/mindgateway/internal/shared/errors"
 )
 
 // ChatCompletionHandler handles OpenAI-compatible chat completion requests

@@ -7,7 +7,7 @@ info:
   version: 1.0.0
   contact:
     name: MindGateway Team
-    url: https://github.com/company/mindgateway
+    url: https://github.com/ncolesummers/mindgateway
 servers:
   - url: https://api.mindgateway.example.com
     description: Production server
