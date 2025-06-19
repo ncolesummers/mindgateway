@@ -1,0 +1,27 @@
+apiVersion: v2
+name: mindgateway
+description: Helm chart for MindGateway LLM Inference Gateway
+
+# Chart type
+type: application
+
+# Chart version
+version: 0.1.0
+
+# Application version
+appVersion: "0.1.0"
+
+keywords:
+  - llm
+  - inference
+  - gateway
+  - ai
+
+home: https://github.com/company/mindgateway
+
+sources:
+  - https://github.com/company/mindgateway
+
+maintainers:
+  - name: MindGateway Team
+    email: team@mindgateway.example.com

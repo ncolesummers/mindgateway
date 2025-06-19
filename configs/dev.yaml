@@ -1,0 +1,54 @@
+# Development configuration for MindGateway
+
+# General settings
+environment: "dev"
+log_level: "debug"
+shutdown_timeout: 30s
+
+# Server settings
+server:
+  address: "0.0.0.0"
+  port: 8080
+
+# Database settings
+database:
+  host: "localhost"
+  port: 5432
+  username: "mindgateway"
+  password: "localdev"
+  name: "mindgateway"
+  ssl_mode: "disable"
+
+# Redis settings
+redis:
+  host: "localhost"
+  port: 6379
+  password: ""
+  db: 0
+
+# ETCD settings
+etcd:
+  endpoints:
+    - "localhost:2379"
+  username: ""
+  password: ""
+
+# Service specific settings
+auth:
+  address: "localhost:9091"
+  jwt_secret: "dev-secret-key-do-not-use-in-production"
+
+registry:
+  address: "localhost:9092"
+
+# Worker settings
+worker:
+  connect_timeout: 5s
+  request_timeout: 60s
+  health_check_period: 30s
+
+# Queue settings
+queue:
+  max_size: 10000
+  default_priority: 5
+  processing_period: 100ms

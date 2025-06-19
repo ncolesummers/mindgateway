@@ -1,0 +1,227 @@
+syntax = "proto3";
+
+package registry;
+
+option go_package = "github.com/company/mindgateway/pkg/proto/registry";
+
+// RegistryService provides worker registry and discovery
+service RegistryService {
+  // RegisterWorker registers a new worker with the system
+  rpc RegisterWorker(RegisterWorkerRequest) returns (RegisterWorkerResponse) {}
+  
+  // UnregisterWorker removes a worker from the registry
+  rpc UnregisterWorker(UnregisterWorkerRequest) returns (UnregisterWorkerResponse) {}
+  
+  // UpdateWorkerStatus updates a worker's status
+  rpc UpdateWorkerStatus(UpdateWorkerStatusRequest) returns (UpdateWorkerStatusResponse) {}
+  
+  // GetWorker retrieves information about a specific worker
+  rpc GetWorker(GetWorkerRequest) returns (GetWorkerResponse) {}
+  
+  // ListWorkers lists all workers matching the filter criteria
+  rpc ListWorkers(ListWorkersRequest) returns (ListWorkersResponse) {}
+  
+  // StreamWorkerUpdates streams worker status updates
+  rpc StreamWorkerUpdates(StreamWorkerUpdatesRequest) returns (stream WorkerUpdate) {}
+  
+  // ConnectWorker establishes a bidirectional connection with a worker
+  rpc ConnectWorker(stream WorkerMessage) returns (stream GatewayMessage) {}
+}
+
+// RegisterWorkerRequest contains information about a worker to register
+message RegisterWorkerRequest {
+  string name = 1;
+  string endpoint = 2;
+  repeated Model models = 3;
+  map<string, string> metadata = 4;
+  WorkerCapabilities capabilities = 5;
+}
+
+// RegisterWorkerResponse contains the result of worker registration
+message RegisterWorkerResponse {
+  string worker_id = 1;
+  string registration_token = 2;
+}
+
+// UnregisterWorkerRequest contains information about a worker to unregister
+message UnregisterWorkerRequest {
+  string worker_id = 1;
+}
+
+// UnregisterWorkerResponse contains the result of worker unregistration
+message UnregisterWorkerResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+// UpdateWorkerStatusRequest contains information about a worker's status update
+message UpdateWorkerStatusRequest {
+  string worker_id = 1;
+  WorkerStatus status = 2;
+  float load = 3;
+  map<string, string> metadata = 4;
+}
+
+// UpdateWorkerStatusResponse contains the result of worker status update
+message UpdateWorkerStatusResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+// GetWorkerRequest contains a worker ID to retrieve
+message GetWorkerRequest {
+  string worker_id = 1;
+}
+
+// GetWorkerResponse contains information about a worker
+message GetWorkerResponse {
+  Worker worker = 1;
+}
+
+// ListWorkersRequest contains filter criteria for listing workers
+message ListWorkersRequest {
+  string model = 1;
+  WorkerStatus status = 2;
+  map<string, string> metadata_filter = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+// ListWorkersResponse contains a list of workers
+message ListWorkersResponse {
+  repeated Worker workers = 1;
+  int32 total = 2;
+}
+
+// StreamWorkerUpdatesRequest contains filter criteria for streaming worker updates
+message StreamWorkerUpdatesRequest {
+  string model = 1;
+  WorkerStatus status = 2;
+  map<string, string> metadata_filter = 3;
+}
+
+// WorkerUpdate contains an update about a worker
+message WorkerUpdate {
+  string worker_id = 1;
+  WorkerStatus status = 2;
+  float load = 3;
+  map<string, string> metadata = 4;
+  int64 timestamp = 5;
+}
+
+// WorkerMessage contains a message from a worker to the gateway
+message WorkerMessage {
+  string worker_id = 1;
+  
+  oneof payload {
+    Heartbeat heartbeat = 2;
+    InferenceResponse inference_response = 3;
+    WorkerStatus status_update = 4;
+    ErrorResponse error = 5;
+  }
+}
+
+// GatewayMessage contains a message from the gateway to a worker
+message GatewayMessage {
+  string request_id = 1;
+  
+  oneof payload {
+    InferenceRequest inference_request = 2;
+    CancelRequest cancel_request = 3;
+    ControlCommand control_command = 4;
+  }
+}
+
+// Heartbeat contains a worker heartbeat
+message Heartbeat {
+  float load = 1;
+  map<string, string> metrics = 2;
+}
+
+// InferenceRequest contains a request for inference
+message InferenceRequest {
+  string model = 1;
+  string prompt = 2;
+  map<string, string> parameters = 3;
+  bool stream = 4;
+}
+
+// InferenceResponse contains a response from inference
+message InferenceResponse {
+  string request_id = 1;
+  string response = 2;
+  bool done = 3;
+  map<string, float> metrics = 4;
+}
+
+// CancelRequest contains a request to cancel inference
+message CancelRequest {
+  string request_id = 1;
+}
+
+// ControlCommand contains a control command for a worker
+message ControlCommand {
+  enum CommandType {
+    UNKNOWN = 0;
+    SHUTDOWN = 1;
+    RESTART = 2;
+    LOAD_MODEL = 3;
+    UNLOAD_MODEL = 4;
+    UPDATE_CONFIG = 5;
+  }
+  
+  CommandType command = 1;
+  map<string, string> parameters = 2;
+}
+
+// ErrorResponse contains an error response from a worker
+message ErrorResponse {
+  string request_id = 1;
+  string error_code = 2;
+  string error_message = 3;
+}
+
+// Worker represents a worker in the registry
+message Worker {
+  string id = 1;
+  string name = 2;
+  string endpoint = 3;
+  repeated Model models = 4;
+  WorkerStatus status = 5;
+  float load = 6;
+  map<string, string> metadata = 7;
+  WorkerCapabilities capabilities = 8;
+  int64 registered_at = 9;
+  int64 last_seen_at = 10;
+}
+
+// Model represents a model supported by a worker
+message Model {
+  string name = 1;
+  string version = 2;
+  string family = 3;
+  int64 parameter_size = 4;
+  string quantization = 5;
+  map<string, string> metadata = 6;
+}
+
+// WorkerStatus represents the status of a worker
+enum WorkerStatus {
+  UNKNOWN = 0;
+  INITIALIZING = 1;
+  READY = 2;
+  BUSY = 3;
+  DRAINING = 4;
+  OFFLINE = 5;
+  ERROR = 6;
+}
+
+// WorkerCapabilities represents capabilities of a worker
+message WorkerCapabilities {
+  bool streaming = 1;
+  bool batching = 2;
+  int32 max_concurrent_requests = 3;
+  int32 max_batch_size = 4;
+  repeated string supported_formats = 5;
+  map<string, string> supported_features = 6;
+}

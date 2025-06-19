@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mindgateway-config
+  namespace: mindgateway
+data:
+  ENVIRONMENT: "prod"
+  CONFIG_PATH: "/app/configs"
+  DB_HOST: "mindgateway-db.mindgateway.svc.cluster.local"
+  DB_PORT: "5432"
+  DB_NAME: "mindgateway"
+  REDIS_HOST: "mindgateway-redis.mindgateway.svc.cluster.local"
+  REDIS_PORT: "6379"
+  ETCD_ENDPOINTS: "mindgateway-etcd.mindgateway.svc.cluster.local:2379"
+  AUTH_SERVICE_ADDRESS: "mindgateway-auth.mindgateway.svc.cluster.local:9091"
+  REGISTRY_SERVICE_ADDRESS: "mindgateway-registry.mindgateway.svc.cluster.local:9092"

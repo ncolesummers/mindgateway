@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mindgateway
+  labels:
+    name: mindgateway
+    app: mindgateway

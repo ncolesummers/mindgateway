@@ -1,0 +1,52 @@
+# See https://golangci-lint.run/usage/configuration/ for reference
+
+run:
+  deadline: 5m
+
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - gosec
+    - revive
+    - gofmt
+    - goimports
+    - misspell
+    - unconvert
+    - gocritic
+  disable:
+    - structcheck # deprecated
+    - varcheck # deprecated
+    - deadcode # deprecated
+    - nosnakecase # deprecated
+    - interfacer # deprecated
+    - scopelint # deprecated
+    - maligned # deprecated
+
+linters-settings:
+  gofmt:
+    simplify: true
+  goimports:
+    local-prefixes: github.com/company/mindgateway
+  revive:
+    rules:
+      - name: exported
+        severity: warning
+        disabled: false
+  gosec:
+    excludes:
+      - G204 # Subprocess launched with a potential tainted input or cmd arguments
+      - G304 # File path provided as taint input
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gosec
+        - errcheck
+  max-issues-per-linter: 0
+  max-same-issues: 0

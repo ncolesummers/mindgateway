@@ -1,0 +1,40 @@
+{
+  "models": [
+    {
+      "name": "llama2",
+      "modified_at": "2023-06-18T12:00:00Z",
+      "size": 3800000000,
+      "digest": "sha256:7b31d1a3c6a6b2a38a6e6f94a9ee831d8cacf61a81da11ab13a856c760549644",
+      "details": {
+        "format": "gguf",
+        "family": "llama",
+        "parameter_size": "7B",
+        "quantization_level": "Q4_0"
+      }
+    },
+    {
+      "name": "mistral",
+      "modified_at": "2023-06-18T12:00:00Z",
+      "size": 4200000000,
+      "digest": "sha256:5f4d1f4cdac3feca8455a93c414e62f7ea45875f36e074b0aed88d62cb8fafef",
+      "details": {
+        "format": "gguf",
+        "family": "mistral",
+        "parameter_size": "7B",
+        "quantization_level": "Q4_0"
+      }
+    },
+    {
+      "name": "vicuna",
+      "modified_at": "2023-06-18T12:00:00Z",
+      "size": 3900000000,
+      "digest": "sha256:08e4e1f2ab1532ac6a50cddc2535a9ba3b85cb192cee1bca7c7aed0151c24f81",
+      "details": {
+        "format": "gguf",
+        "family": "llama",
+        "parameter_size": "7B",
+        "quantization_level": "Q4_0"
+      }
+    }
+  ]
+}

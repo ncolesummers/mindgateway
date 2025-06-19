@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "github.com/company/mindgateway/pkg/proto/auth";
+
+// AuthService provides authentication and authorization services
+service AuthService {
+  // ValidateToken validates a JWT token and returns the claims
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {}
+  
+  // GetUserRoles retrieves roles for a user
+  rpc GetUserRoles(GetUserRolesRequest) returns (GetUserRolesResponse) {}
+  
+  // CreateToken creates a new JWT token for a user
+  rpc CreateToken(CreateTokenRequest) returns (CreateTokenResponse) {}
+  
+  // RevokeToken revokes a JWT token
+  rpc RevokeToken(RevokeTokenRequest) returns (RevokeTokenResponse) {}
+  
+  // CheckPermission checks if a user has a specific permission
+  rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionResponse) {}
+}
+
+// ValidateTokenRequest contains a JWT token to validate
+message ValidateTokenRequest {
+  string token = 1;
+}
+
+// ValidateTokenResponse contains the validation result and claims
+message ValidateTokenResponse {
+  bool valid = 1;
+  string user_id = 2;
+  repeated string roles = 3;
+  map<string, string> claims = 4;
+  string error = 5;
+}
+
+// GetUserRolesRequest contains a user ID
+message GetUserRolesRequest {
+  string user_id = 1;
+}
+
+// GetUserRolesResponse contains the user's roles
+message GetUserRolesResponse {
+  repeated string roles = 1;
+  repeated Permission permissions = 2;
+}
+
+// CreateTokenRequest contains information to create a token
+message CreateTokenRequest {
+  string user_id = 1;
+  repeated string roles = 2;
+  map<string, string> claims = 3;
+  int64 expiration_seconds = 4;
+}
+
+// CreateTokenResponse contains the created token
+message CreateTokenResponse {
+  string token = 1;
+  int64 expires_at = 2;
+}
+
+// RevokeTokenRequest contains a token to revoke
+message RevokeTokenRequest {
+  string token = 1;
+}
+
+// RevokeTokenResponse contains the result of token revocation
+message RevokeTokenResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+// CheckPermissionRequest contains a permission check request
+message CheckPermissionRequest {
+  string user_id = 1;
+  string resource = 2;
+  string action = 3;
+}
+
+// CheckPermissionResponse contains the permission check result
+message CheckPermissionResponse {
+  bool allowed = 1;
+}
+
+// Permission represents a permission on a resource
+message Permission {
+  string resource = 1;
+  string action = 2;
+}

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mindgateway-registry
+  namespace: mindgateway
+  labels:
+    app: mindgateway
+    component: registry
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mindgateway
+      component: registry
+  template:
+    metadata:
+      labels:
+        app: mindgateway
+        component: registry
+    spec:
+      containers:
+      - name: registry
+        image: ${REGISTRY}/mindgateway/registry:${TAG}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9092
+          name: grpc
+        envFrom:
+        - configMapRef:
+            name: mindgateway-config
+        - secretRef:
+            name: mindgateway-secrets
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi

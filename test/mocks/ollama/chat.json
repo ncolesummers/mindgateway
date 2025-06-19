@@ -1,0 +1,14 @@
+{
+  "model": "llama2",
+  "created_at": "2023-06-18T12:30:45Z",
+  "message": {
+    "role": "assistant",
+    "content": "This is a mock response from the Ollama API for testing purposes. The actual implementation would connect to a real Ollama instance."
+  },
+  "done": true,
+  "total_duration": 1500000000,
+  "load_duration": 500000000,
+  "prompt_eval_count": 15,
+  "eval_count": 100,
+  "eval_duration": 1000000000
+}
